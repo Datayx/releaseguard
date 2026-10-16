@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/fastapi/fastapi",
+  "commit": "bb7f314287bf36e04539c572a2256d94ea45f0d6",
+  "path": "docs_src/sql_databases/tutorial002_an_py310.py",
+  "license": "MIT"
+}

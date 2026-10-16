@@ -1,0 +1,53 @@
+{
+  "base_url": "http://127.0.0.1:8002",
+  "timeout_seconds": 5,
+  "steps": [
+    {
+      "name": "Create a hero",
+      "method": "POST",
+      "path": "/heroes/",
+      "json": {"name": "checker-${run_id}", "secret_name": "test-only", "age": 25},
+      "expect": {"status": 200, "json": {"name": "checker-${run_id}", "age": 25}},
+      "capture": {"hero_id": "id"}
+    },
+    {
+      "name": "Read the created hero",
+      "path": "/heroes/${hero_id}",
+      "expect": {"status": 200, "json": {"id": "${hero_id}", "name": "checker-${run_id}", "age": 25}}
+    },
+    {
+      "name": "Update hero age",
+      "method": "PATCH",
+      "path": "/heroes/${hero_id}",
+      "json": {"age": 26},
+      "expect": {"status": 200}
+    },
+    {
+      "name": "Verify the update persisted",
+      "path": "/heroes/${hero_id}",
+      "expect": {"status": 200, "json": {"id": "${hero_id}", "age": 26}}
+    },
+    {
+      "name": "Reject an invalid hero",
+      "method": "POST",
+      "path": "/heroes/",
+      "json": {"age": 25},
+      "expect": {"status": 422}
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "Delete our test hero",
+      "requires": ["hero_id"],
+      "method": "DELETE",
+      "path": "/heroes/${hero_id}",
+      "expect": {"status": 200, "json": {"ok": true}}
+    },
+    {
+      "name": "Verify the hero was removed",
+      "requires": ["hero_id"],
+      "path": "/heroes/${hero_id}",
+      "expect": {"status": 404}
+    }
+  ]
+}

@@ -1,0 +1,356 @@
+{
+  "base_url": "http://127.0.0.1:8001",
+  "timeout_seconds": 10,
+  "steps": [
+    {
+      "name": "Model ready",
+      "path": "/health",
+      "expect": {
+        "status": 200,
+        "json": {
+          "status": "ready",
+          "sequence_length": 50
+        }
+      }
+    },
+    {
+      "name": "Predict from battery history",
+      "method": "POST",
+      "path": "/predict",
+      "json": {
+        "cycles": [
+          {
+            "max_temperature": 38.98218133148803,
+            "avg_voltage": 3.5298286688693397,
+            "time_to_discharge": 3690.234,
+            "cycle_index": 1
+          },
+          {
+            "max_temperature": 39.033397966787035,
+            "avg_voltage": 3.5373201277859714,
+            "time_to_discharge": 3672.344,
+            "cycle_index": 2
+          },
+          {
+            "max_temperature": 38.818796689817404,
+            "avg_voltage": 3.5437367282719,
+            "time_to_discharge": 3651.641,
+            "cycle_index": 3
+          },
+          {
+            "max_temperature": 38.7623045063458,
+            "avg_voltage": 3.5436661072601456,
+            "time_to_discharge": 3631.563,
+            "cycle_index": 4
+          },
+          {
+            "max_temperature": 38.66539257343368,
+            "avg_voltage": 3.5423432526672167,
+            "time_to_discharge": 3629.172,
+            "cycle_index": 5
+          },
+          {
+            "max_temperature": 38.75169504640032,
+            "avg_voltage": 3.5413347346347575,
+            "time_to_discharge": 3652.281,
+            "cycle_index": 6
+          },
+          {
+            "max_temperature": 38.8207012322275,
+            "avg_voltage": 3.5410250495075215,
+            "time_to_discharge": 3650.828,
+            "cycle_index": 7
+          },
+          {
+            "max_temperature": 38.51713023385634,
+            "avg_voltage": 3.554133296801584,
+            "time_to_discharge": 3572.453,
+            "cycle_index": 8
+          },
+          {
+            "max_temperature": 38.526267904657,
+            "avg_voltage": 3.5529355991467955,
+            "time_to_discharge": 3550.594,
+            "cycle_index": 9
+          },
+          {
+            "max_temperature": 38.52698128472781,
+            "avg_voltage": 3.5512057319376997,
+            "time_to_discharge": 3551.25,
+            "cycle_index": 10
+          },
+          {
+            "max_temperature": 38.54143406601644,
+            "avg_voltage": 3.549292319740949,
+            "time_to_discharge": 3530.25,
+            "cycle_index": 11
+          },
+          {
+            "max_temperature": 38.52197451768004,
+            "avg_voltage": 3.559759220648976,
+            "time_to_discharge": 3491.016,
+            "cycle_index": 12
+          },
+          {
+            "max_temperature": 38.582485834057856,
+            "avg_voltage": 3.558081969139198,
+            "time_to_discharge": 3470.281,
+            "cycle_index": 13
+          },
+          {
+            "max_temperature": 38.520294134873915,
+            "avg_voltage": 3.555692244172496,
+            "time_to_discharge": 3470.0,
+            "cycle_index": 14
+          },
+          {
+            "max_temperature": 38.21358592965045,
+            "avg_voltage": 3.562746818017503,
+            "time_to_discharge": 3450.297,
+            "cycle_index": 15
+          },
+          {
+            "max_temperature": 38.1983618706913,
+            "avg_voltage": 3.5614521756489204,
+            "time_to_discharge": 3429.407,
+            "cycle_index": 16
+          },
+          {
+            "max_temperature": 38.31926916027133,
+            "avg_voltage": 3.5603420474985823,
+            "time_to_discharge": 3409.484,
+            "cycle_index": 17
+          },
+          {
+            "max_temperature": 38.4787542519308,
+            "avg_voltage": 3.5591189041401865,
+            "time_to_discharge": 3390.422,
+            "cycle_index": 18
+          },
+          {
+            "max_temperature": 38.54659017774874,
+            "avg_voltage": 3.557886771846508,
+            "time_to_discharge": 3390.281,
+            "cycle_index": 19
+          },
+          {
+            "max_temperature": 38.44749852224995,
+            "avg_voltage": 3.5520375235511907,
+            "time_to_discharge": 3591.734,
+            "cycle_index": 20
+          },
+          {
+            "max_temperature": 38.992275791716615,
+            "avg_voltage": 3.5525668436897124,
+            "time_to_discharge": 3552.297,
+            "cycle_index": 21
+          },
+          {
+            "max_temperature": 38.51424197364312,
+            "avg_voltage": 3.556794038327039,
+            "time_to_discharge": 3531.578,
+            "cycle_index": 22
+          },
+          {
+            "max_temperature": 38.165816144899125,
+            "avg_voltage": 3.5614100044534203,
+            "time_to_discharge": 3492.907,
+            "cycle_index": 23
+          },
+          {
+            "max_temperature": 38.16526203587147,
+            "avg_voltage": 3.5566107947817986,
+            "time_to_discharge": 3511.594,
+            "cycle_index": 24
+          },
+          {
+            "max_temperature": 38.27549578575718,
+            "avg_voltage": 3.5586742170266272,
+            "time_to_discharge": 3431.9370000000054,
+            "cycle_index": 25
+          },
+          {
+            "max_temperature": 37.982160799183106,
+            "avg_voltage": 3.564103182686905,
+            "time_to_discharge": 3431.125,
+            "cycle_index": 26
+          },
+          {
+            "max_temperature": 38.11100191887773,
+            "avg_voltage": 3.559588063594272,
+            "time_to_discharge": 3412.406,
+            "cycle_index": 27
+          },
+          {
+            "max_temperature": 38.18831137948753,
+            "avg_voltage": 3.556833231052199,
+            "time_to_discharge": 3410.688,
+            "cycle_index": 28
+          },
+          {
+            "max_temperature": 37.998541119085836,
+            "avg_voltage": 3.5624410850948944,
+            "time_to_discharge": 3410.718,
+            "cycle_index": 29
+          },
+          {
+            "max_temperature": 38.194201649765226,
+            "avg_voltage": 3.5591407106855666,
+            "time_to_discharge": 3392.719,
+            "cycle_index": 30
+          },
+          {
+            "max_temperature": 38.45796400011448,
+            "avg_voltage": 3.5573161327793144,
+            "time_to_discharge": 3470.672,
+            "cycle_index": 31
+          },
+          {
+            "max_temperature": 38.49126351534004,
+            "avg_voltage": 3.561870782772737,
+            "time_to_discharge": 3414.109,
+            "cycle_index": 32
+          },
+          {
+            "max_temperature": 38.31473393357882,
+            "avg_voltage": 3.5617586337260088,
+            "time_to_discharge": 3395.219,
+            "cycle_index": 33
+          },
+          {
+            "max_temperature": 37.861934640176806,
+            "avg_voltage": 3.5597307651083123,
+            "time_to_discharge": 3386.0,
+            "cycle_index": 34
+          },
+          {
+            "max_temperature": 37.90665575786083,
+            "avg_voltage": 3.5575937553540915,
+            "time_to_discharge": 3368.187,
+            "cycle_index": 35
+          },
+          {
+            "max_temperature": 38.34003238560517,
+            "avg_voltage": 3.5597237883937995,
+            "time_to_discharge": 3368.266,
+            "cycle_index": 36
+          },
+          {
+            "max_temperature": 38.0745950590744,
+            "avg_voltage": 3.559061771422033,
+            "time_to_discharge": 3358.719,
+            "cycle_index": 37
+          },
+          {
+            "max_temperature": 38.07252758016199,
+            "avg_voltage": 3.557015527748059,
+            "time_to_discharge": 3339.5,
+            "cycle_index": 38
+          },
+          {
+            "max_temperature": 37.80133585100446,
+            "avg_voltage": 3.5562481933590964,
+            "time_to_discharge": 3331.265,
+            "cycle_index": 39
+          },
+          {
+            "max_temperature": 38.39873985476869,
+            "avg_voltage": 3.5532756526091784,
+            "time_to_discharge": 3321.188,
+            "cycle_index": 40
+          },
+          {
+            "max_temperature": 38.74929237918251,
+            "avg_voltage": 3.556266431640255,
+            "time_to_discharge": 3321.844,
+            "cycle_index": 41
+          },
+          {
+            "max_temperature": 38.87275464755104,
+            "avg_voltage": 3.5563095420140822,
+            "time_to_discharge": 3311.828,
+            "cycle_index": 42
+          },
+          {
+            "max_temperature": 38.503541429116005,
+            "avg_voltage": 3.558950851054106,
+            "time_to_discharge": 3327.391,
+            "cycle_index": 43
+          },
+          {
+            "max_temperature": 38.27009094548294,
+            "avg_voltage": 3.5534418211598053,
+            "time_to_discharge": 3312.078,
+            "cycle_index": 44
+          },
+          {
+            "max_temperature": 38.11684755251712,
+            "avg_voltage": 3.5510121537420285,
+            "time_to_discharge": 3293.172,
+            "cycle_index": 45
+          },
+          {
+            "max_temperature": 38.04152715355532,
+            "avg_voltage": 3.551317608213948,
+            "time_to_discharge": 3275.328,
+            "cycle_index": 46
+          },
+          {
+            "max_temperature": 38.17980302242767,
+            "avg_voltage": 3.549003180550162,
+            "time_to_discharge": 3265.016,
+            "cycle_index": 47
+          },
+          {
+            "max_temperature": 40.71218198711114,
+            "avg_voltage": 3.5597648340955175,
+            "time_to_discharge": 3328.937,
+            "cycle_index": 48
+          },
+          {
+            "max_temperature": 39.885261233152924,
+            "avg_voltage": 3.5623454342368555,
+            "time_to_discharge": 3329.266,
+            "cycle_index": 49
+          },
+          {
+            "max_temperature": 39.18287352945846,
+            "avg_voltage": 3.558336657621618,
+            "time_to_discharge": 3301.579,
+            "cycle_index": 50
+          }
+        ]
+      },
+      "expect": {
+        "status": 200,
+        "json": {
+          "cycles_used": 50
+        },
+        "json_ranges": {
+          "soh": [
+            0,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "name": "Reject insufficient history",
+      "method": "POST",
+      "path": "/predict",
+      "json": {
+        "cycles": [
+          {
+            "max_temperature": 38.98218133148803,
+            "avg_voltage": 3.5298286688693397,
+            "time_to_discharge": 3690.234,
+            "cycle_index": 1
+          }
+        ]
+      },
+      "expect": {
+        "status": 422
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+name: ReleaseGuard
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install dependencies
+        run: |
+          python -m pip install -e .
+          python -m pip install -r integrations/fastapi-heroes/requirements-lock.txt
+      - name: Test runner and baseline logic
+        run: python -m unittest -v
+      - name: Verify healthy and faulty API releases
+        run: python verify_heroes.py
+      - name: Save integration reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow-reports
+          path: |
+            integrations/fastapi-heroes/verification.json
+            integrations/fastapi-heroes/verified-baseline.json
+          if-no-files-found: ignore

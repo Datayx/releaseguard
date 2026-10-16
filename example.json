@@ -1,0 +1,27 @@
+{
+  "base_url": "http://127.0.0.1:8000",
+  "timeout_seconds": 3,
+  "steps": [
+    {
+      "name": "Create task",
+      "method": "POST",
+      "path": "/tasks",
+      "json": {"id": "${run_id}", "title": "workflow-check"},
+      "expect": {"status": 201},
+      "capture": {"task_id": "id"}
+    },
+    {
+      "name": "Verify saved task",
+      "path": "/tasks/${task_id}",
+      "expect": {"status": 200, "json": {"title": "workflow-check", "id": "${task_id}"}}
+    }
+  ],
+  "cleanup": [
+    {
+      "name": "Remove test task",
+      "method": "DELETE",
+      "path": "/tasks/${run_id}",
+      "expect": {"status": 200}
+    }
+  ]
+}

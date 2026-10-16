@@ -1,0 +1,10 @@
+__pycache__/
+.venv/
+*.egg-info/
+report.json
+integrations/fastapi-heroes/runtime/
+integrations/fastapi-heroes/verification.json
+integrations/fastapi-heroes/verified-baseline.json
+baseline.json
+v1.json
+v2.json
