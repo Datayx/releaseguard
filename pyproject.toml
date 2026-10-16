@@ -14,4 +14,4 @@ releaseguard = "workflow_checker:main"
 workflow-check = "workflow_checker:main"
 
 [tool.setuptools]
-py-modules = ["workflow_checker", "deployment"]
+py-modules = ["workflow_checker", "deployment", "reporting"]

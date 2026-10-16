@@ -24,6 +24,7 @@
     },
     {
       "name": "Verify the update persisted",
+      "diagnostic_fields": ["age"],
       "path": "/heroes/${hero_id}",
       "expect": {"status": 200, "json": {"id": "${hero_id}", "age": 26}}
     },

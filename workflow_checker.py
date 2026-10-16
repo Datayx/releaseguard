@@ -18,6 +18,13 @@ class NoRedirect(HTTPRedirectHandler):
         return None  # Do not forward credentials to a redirected destination.
 
 
+def diagnostic_value(value, path, step):
+    # Only explicitly allowlisted numeric/boolean fields may expose values.
+    if path in step.get('diagnostic_fields', []) and (type(value) is bool or type(value) in (int, float) and math.isfinite(value)):
+        return value
+    return '[redacted]'
+
+
 def lookup(value, path):
     for part in path.split(".") if path else []:
         value = value[int(part)] if isinstance(value, list) else value[part]
@@ -60,6 +67,9 @@ def validate(spec):
         if step["name"] in names:
             raise ValueError("Step names must be unique")
         names.add(step["name"])
+        fields = step.get('diagnostic_fields', [])
+        if not isinstance(fields, list) or any(not isinstance(field, str) for field in fields):
+            raise ValueError('diagnostic_fields must be a list of non-sensitive JSON paths')
         path = step.get("path", "")
         if not isinstance(path, str) or not path.startswith("/") or path.startswith("//"):
             raise ValueError("Step paths must begin with a single slash")
@@ -106,23 +116,44 @@ def execute(step, spec, variables):
             return result
         if result["status"] != resolved["expect"]["status"]:
             result["error"] = "status_mismatch"
+            result['details'] = {'expected_status': resolved['expect']['status']}
             return result
         assertions = resolved["expect"].get("json", {})
         captures = resolved.get("capture", {})
         ranges = resolved["expect"].get("json_ranges", {})
         if assertions or captures or ranges:
-            data = json.loads(raw)
+            try:
+                data = json.loads(raw)
+            except (ValueError, UnicodeError):
+                result['error'] = 'invalid_json_response'
+                return result
             for path, expected in assertions.items():
-                actual = lookup(data, path)
+                try:
+                    actual = lookup(data, path)
+                except (KeyError, IndexError, TypeError, ValueError):
+                    result['error'] = 'missing_json_field'
+                    result['details'] = {'field': path}
+                    return result
                 if type(actual) is not type(expected) or actual != expected:
                     result["error"] = "json_assertion_mismatch"
+                    result['details'] = {'field': path, 'expected': diagnostic_value(expected, path, step), 'actual': diagnostic_value(actual, path, step)}
                     return result
             for path, bounds in ranges.items():
-                actual = lookup(data, path)
+                try:
+                    actual = lookup(data, path)
+                except (KeyError, IndexError, TypeError, ValueError):
+                    result['error'] = 'missing_json_field'
+                    result['details'] = {'field': path}
+                    return result
                 if type(actual) not in (int, float) or not math.isfinite(actual) or not bounds[0] <= actual <= bounds[1]:
                     result["error"] = "json_range_mismatch"
+                    result['details'] = {'field': path, 'minimum': diagnostic_value(bounds[0], path, step), 'maximum': diagnostic_value(bounds[1], path, step), 'actual': diagnostic_value(actual, path, step)}
                     return result
-            captured = {name: lookup(data, path) for name, path in captures.items()}
+            try:
+                captured = {name: lookup(data, path) for name, path in captures.items()}
+            except (KeyError, IndexError, TypeError, ValueError):
+                result['error'] = 'capture_failed'
+                return result
             variables.update(captured)
         result["passed"] = True
     except Exception as exc:
@@ -154,6 +185,7 @@ def run(spec):
     report["passed"] = all(r["passed"] for r in report["steps"]) and all(
         r.get("passed", r.get("skipped", False)) for r in report["cleanup"]
     )
+    report['steps_not_run'] = len(spec['steps']) - len(report['steps'])
     return report
 
 
@@ -170,10 +202,12 @@ def load(path):
 
 def main():
     from deployment import atomic_write, compare, promote, read_baseline, tag
+    from reporting import format_report
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("workflow")
     parser.add_argument("--output", help="Write a redacted JSON report")
+    parser.add_argument('--format', choices=['text', 'json'], default='text', help='Terminal output format (default: text)')
     parser.add_argument("--release", help="Release identifier, such as a commit SHA")
     parser.add_argument("--environment", help="Target environment, such as local or staging")
     parser.add_argument("--baseline", help="Compare against this successful report; never implicitly overwrite it")
@@ -206,7 +240,7 @@ def main():
     except (ValueError, KeyError, TypeError, OSError) as exc:
         print(f"Configuration error ({type(exc).__name__}); check workflow and required environment variables", file=sys.stderr)
         return 2
-    output = json.dumps(report, indent=2)
+    output = json.dumps(report, indent=2) if args.format == 'json' else format_report(report)
     print(output)
     return 0 if report["passed"] else 1
 

@@ -49,6 +49,7 @@ The read step now returns an incorrect title. The checker fails and still delete
 - `expect.json`: optional mapping of dotted JSON paths to expected values; numeric path components index arrays. Keys containing literal dots are unsupported.
 - `expect.json_ranges`: optional mapping of dotted JSON paths to inclusive `[minimum, maximum]` numeric bounds. Rejects strings, booleans, and non-finite values.
 - `capture`: mapping of variable names to response JSON paths.
+- `diagnostic_fields`: optional allowlist of JSON paths whose numeric/boolean values may appear in failure reports, e.g. `["age"]`. Other response values are redacted; strings and non-finite numbers are always redacted. Use only non-sensitive fields. Names and field paths are metadata: do not put secrets in either.
 - `${variable}`: substitutes captured values or the built-in `run_id`. A whole-value substitution preserves its JSON type.
 - `cleanup`: requests attempted after success or failure. Optional `requires` lists variables that must exist; otherwise that cleanup step is explicitly skipped.
 
@@ -58,7 +59,22 @@ Use separate test accounts and test data. Do not point write workflows at valuab
 
 Exit codes: 0 passed, 1 workflow/cleanup failed, 2 invalid configuration. Reports include step names, HTTP status, timings, and error categories. They omit URLs, headers, payloads, and exception messages. Do not put secrets in step names. Protect workflow files and reports appropriately.
 
-There are no implicit retries. Redirects are not followed. Responses are capped at 1 MiB. TLS verification remains enabled. Run only trusted workflow files locally: targets are not isolated, and this is not safe as a public multi-tenant executor. Captures inserted into paths are literal; use URL-safe IDs. No polling, browser execution, concurrent runs, deployment comparison, persistence service, or alerting yet.
+There are no implicit retries. Redirects are not followed. Responses are capped at 1 MiB. TLS verification remains enabled. Run only trusted workflow files locally: targets are not isolated, and this is not safe as a public multi-tenant executor. Captures inserted into paths are literal; use URL-safe IDs. No polling, browser execution, concurrent runs, persistence service, or alerting yet.
+
+Terminal output is a readable summary by default. `--format json` emits machine-readable JSON to stdout; `--output report.json` always saves JSON regardless of terminal format. Scripts that previously parsed stdout should add `--format json`. Failures identify the HTTP status mismatch, missing JSON field, failed assertion, timeout, or connection error without printing raw response bodies or exception messages. Cleanup and any workflow steps not run are reported separately.
+
+For the deliberately broken Heroes API, the summary includes:
+
+```text
+ReleaseGuard | FAIL
+...
+  FAIL  Verify the update persisted | HTTP 200 | ... ms
+        Field 'age': expected 26; received 25.
+...
+Cleanup
+  PASS  Delete our test hero | HTTP 200 | ... ms
+  PASS  Verify the hero was removed | HTTP 404 | ... ms
+```
 
 ## Verify
 

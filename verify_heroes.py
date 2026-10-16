@@ -52,6 +52,7 @@ def verify(broken, port=None, baseline=None):
                 workflow_path = Path(directory) / 'workflow.json'
                 workflow_path.write_text(json.dumps(workflow), encoding='utf-8')
                 command = [sys.executable, str(ROOT / 'workflow_checker.py'), str(workflow_path),
+                           '--format', 'json',
                            '--release', 'faulty-v2' if broken else 'healthy-v1', '--environment', 'local-integration']
                 if baseline:
                     command += ['--baseline' if broken else '--set-baseline', str(baseline)]
